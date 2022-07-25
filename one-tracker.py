@@ -2,19 +2,19 @@ import websocket
 import json
 from datetime import datetime
 import requests
+import time
 
 BINANCE_WEBSOCKET_ADDRESS = "wss://stream.binance.com:9443/ws/!miniTicker@arr"
 EXCHANGE_INFO = "https://api.binance.com/api/v3/exchangeInfo"
 
-price_data = []
+PRICE_DATA = {}
 
 def main():
     exchange_info = get_exchange_info()
     pairs = get_pairs(exchange_info)
     for pair in pairs:
-        price_data.append({"pair": pair, "prices": []})
-    print(price_data)
-    # init_stream()
+        PRICE_DATA[pair] = []
+    init_stream()
 
 
 def get_pairs(exchange_info):
@@ -55,21 +55,26 @@ def on_open(w_s):
 
 
 def on_message(w_s, message):
+    global PRICE_DATA
     ticker_data = json.loads(message)
 
     for t in ticker_data:
-        if t["s"] == "BTCUSDT":
-            timestamp = t["E"]
-            dt_object = datetime.fromtimestamp(timestamp / 1000.0)
+        if "USDT" in t["s"] or "BUSD" in t["s"]:
+            if len(PRICE_DATA[t["s"]]) == 60:
+                PRICE_DATA[t["s"]].pop(0)
+            PRICE_DATA[t["s"]].append(t["c"])
+            anomaly = check_anomaly(PRICE_DATA[t["s"]])
+            if anomaly:
+                print(time.ctime(), t["s"])
 
-            if dt_object.second == 59:
-                print(dt_object.minute, dt_object.second, t["o"], t["c"])
 
-            if dt_object.second == 0:
-                print(dt_object.minute, dt_object.second, t["o"], t["c"])
+def check_anomaly(prices):
+    if float(prices[-1]) > (float(prices[0]) + (float(prices[0]) * 0.05)):
+        return True
+    else:
+        return False
 
-            if dt_object.second == 1:
-                print(dt_object.minute, dt_object.second, t["o"], t["c"])
+
 
 if __name__ == "__main__":
     main()
