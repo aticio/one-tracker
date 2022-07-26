@@ -65,7 +65,6 @@ def on_message(w_s, message):
             PRICE_DATA[t["s"]].append(t["c"])
             anomaly = check_anomaly(PRICE_DATA[t["s"]])
             if anomaly:
-                # Could be changed 
                 print(time.ctime(), t["s"], t["c"])
 
 
