@@ -8,6 +8,7 @@ BINANCE_WEBSOCKET_ADDRESS = "wss://stream.binance.com:9443/ws/!miniTicker@arr"
 EXCHANGE_INFO = "https://api.binance.com/api/v3/exchangeInfo"
 
 PRICE_DATA = {}
+WATCHLIST = []
 
 def main():
     exchange_info = get_exchange_info()
@@ -56,25 +57,31 @@ def on_open(w_s):
 
 def on_message(w_s, message):
     global PRICE_DATA
+    global WATCHLIST
     ticker_data = json.loads(message)
 
     for t in ticker_data:
-        if "USDT" in t["s"] or "BUSD" in t["s"]:
-            if len(PRICE_DATA[t["s"]]) == 60:
+        if "BUSD" in t["s"]:
+            if len(PRICE_DATA[t["s"]]) == 18000:
                 PRICE_DATA[t["s"]].pop(0)
             PRICE_DATA[t["s"]].append(t["c"])
-            anomaly = check_anomaly(PRICE_DATA[t["s"]])
-            if anomaly:
-                print(time.ctime(), t["s"], t["c"])
-
+            if t['s'] not in WATCHLIST:
+                anomaly = check_anomaly(PRICE_DATA[t["s"]])
+                if anomaly:
+                    WATCHLIST.append(t['s'])
+                    print(time.ctime(), t["s"], t["c"])
+                    f = open("anomaly.txt", "a")
+                    f.write(time.ctime() + " - " + t["s"] + " - " + t["c"] + "\n")
+                    f.close()
 
 
 def check_anomaly(prices):
-    if float(prices[-1]) > (float(prices[0]) + (float(prices[0]) * 0.05)):
-        return True
-    else:
-        return False
-
+    anomaly = False
+    for p in prices[60:]:
+        if float(prices[-1]) > (float(p) + (float(p) * 0.1)):
+            anomaly = True
+            break
+    return anomaly
 
 
 if __name__ == "__main__":
