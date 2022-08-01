@@ -62,7 +62,7 @@ def on_message(w_s, message):
 
     for t in ticker_data:
         if "BUSD" in t["s"]:
-            if len(PRICE_DATA[t["s"]]) == 18000:
+            if len(PRICE_DATA[t["s"]]) == 180:
                 PRICE_DATA[t["s"]].pop(0)
             PRICE_DATA[t["s"]].append(t["c"])
             if t['s'] not in WATCHLIST:
@@ -78,7 +78,7 @@ def on_message(w_s, message):
 def check_anomaly(prices):
     anomaly = False
     for p in prices[60:]:
-        if float(prices[-1]) > (float(p) + (float(p) * 0.1)):
+        if float(prices[-1]) > (float(p) + (float(p) * 0.089)):
             anomaly = True
             break
     return anomaly
