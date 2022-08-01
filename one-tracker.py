@@ -61,7 +61,7 @@ def on_message(w_s, message):
     ticker_data = json.loads(message)
 
     for t in ticker_data:
-        # Test comment
+        # Test comment 1
         if "BUSD" in t["s"]:
             if len(PRICE_DATA[t["s"]]) == 180:
                 PRICE_DATA[t["s"]].pop(0)
