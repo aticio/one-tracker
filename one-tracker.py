@@ -79,7 +79,7 @@ def on_message(w_s, message):
 def check_anomaly(prices):
     anomaly = False
     for p in prices[60:]:
-        if float(prices[-1]) > (float(p) + (float(p) * 0.089)):
+        if float(prices[-1]) > (float(p) + (float(p) * 0.03)):
             anomaly = True
             break
     return anomaly
