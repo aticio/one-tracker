@@ -63,7 +63,7 @@ def on_message(w_s, message):
     for t in ticker_data:
         # Test comment 1
         if "BUSD" in t["s"]:
-            if len(PRICE_DATA[t["s"]]) == 90:
+            if len(PRICE_DATA[t["s"]]) == 3600:
                 PRICE_DATA[t["s"]].pop(0)
             PRICE_DATA[t["s"]].append(t["c"])
             if t['s'] not in WATCHLIST:
