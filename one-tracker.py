@@ -61,6 +61,8 @@ def on_message(w_s, message):
     ticker_data = json.loads(message)
 
     for t in ticker_data:
+        if t['s'] == 'ALPACABUSD':
+            print(t['s'], t['c'], t['v'])
         # Test comment 1
         if "BUSD" in t["s"]:
             if len(PRICE_DATA[t["s"]]) == 3600:
@@ -79,7 +81,7 @@ def on_message(w_s, message):
 def check_anomaly(prices):
     anomaly = False
     for p in prices[60:]:
-        if float(prices[-1]) > (float(p) + (float(p) * 0.03)):
+        if float(prices[-1]) > (float(p) + (float(p) * 0.1)):
             anomaly = True
             break
     return anomaly
