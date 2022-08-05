@@ -46,7 +46,7 @@ def on_error(w_s, error):
     print(error)
 
 
-def on_close(w_s):
+def on_close(w_s, close_status_code, close_msg):
     print("closing websocket connection, initiating again...")
     init_stream()
 
