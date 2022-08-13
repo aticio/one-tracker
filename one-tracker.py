@@ -65,7 +65,7 @@ def on_message(w_s, message):
             print(t['s'], t['c'], t['v'])
         # Test comment 1
         if "BUSD" in t["s"]:
-            if len(PRICE_DATA[t["s"]]) == 3600:
+            if len(PRICE_DATA[t["s"]]) == 90:
                 PRICE_DATA[t["s"]].pop(0)
             PRICE_DATA[t["s"]].append(t["c"])
             if t['s'] not in WATCHLIST:
