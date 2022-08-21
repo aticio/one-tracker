@@ -97,7 +97,7 @@ def check_anomaly(price_data):
     for pd in price_data:
         current_dt = datetime.fromtimestamp(int(pd[0])/1000)
         current_delta = abs(int((now_dt-current_dt).total_seconds()))
-        if current_delta < 180 and current_delta > 60:
+        if current_delta < 120 and current_delta > 60:
             anomaly_area.append(pd)
 
     for pd in price_data:
