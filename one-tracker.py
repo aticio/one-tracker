@@ -107,7 +107,7 @@ def check_anomaly(price_data):
             distance_area.append(pd)
     
     for aa in anomaly_area:
-        if float(price_data[-1][1]) > (float(aa[1]) + (float(aa[1]) * 0.1)):
+        if float(price_data[-1][1]) > (float(aa[1]) + (float(aa[1]) * 0.09)):
             anomaly = True
             break
 
